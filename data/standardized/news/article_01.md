@@ -1,10 +1,17 @@
-# Kết quả XTTN Bách khoa Hà Nội năm 2026: Chất lượng thí sinh vượt trội
-
-**Source:** https://www.hust.edu.vn/vi/news/tin-tuc-su-kien/ket-qua-xttn-bach-khoa-ha-noi-nam-2026-chat-luong-thi-sinh-vuot-troi-655969.html
-**Published:** 2026-07-07
-**Crawled:** 2026-08-04T08:54:11.455892+00:00
-
 ---
+doc_id: "article_01"
+title: "Kết quả XTTN Bách khoa Hà Nội năm 2026: Chất lượng thí sinh vượt trội"
+source_url: "https://www.hust.edu.vn/vi/news/tin-tuc-su-kien/ket-qua-xttn-bach-khoa-ha-noi-nam-2026-chat-luong-thi-sinh-vuot-troi-655969.html"
+source_type: "news"
+document_type: "tin_tuc"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2026"
+published_date: "2026-07-07"
+retrieved_at: "2026-08-04"
+audience: "thi_sinh"
+---
+
+# Kết quả XTTN Bách khoa Hà Nội năm 2026: Chất lượng thí sinh vượt trội
 
 # Kết quả XTTN Bách khoa Hà Nội năm 2026: Chất lượng thí sinh vượt trội
 Ban Tuyển sinh - Hướng nghiệp

@@ -1,3 +1,16 @@
+---
+doc_id: "xet-tuyen-tai-nang"
+title: "Quy định Phương thức Xét tuyển tài năng - Đại học Bách Khoa Hà Nội"
+source_url: "https://hust.edu.vn/uploads/sys/tuyen-sinh/xet-tuyen-tai-nang.pdf"
+source_type: "legal"
+document_type: "quy_dinh"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2025"
+published_date: "not-stated"
+retrieved_at: "2026-08-04"
+audience: "thi_sinh"
+---
+
 QUY ĐỊNH
 Phương thức Xét tuyển tài năng đối với tuyển sinh đại học hệ chính quy
 áp dụng từ năm 2025

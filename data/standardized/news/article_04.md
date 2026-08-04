@@ -1,10 +1,17 @@
-# Hướng dẫn đăng ký Xét tuyển tài năng 2026
-
-**Source:** https://ts.hust.edu.vn/tin-tuc/huong-dan-dang-ky-xet-tuyen-tai-nang-2026
-**Published:** 2026-05-13
-**Crawled:** 2026-08-04T08:54:26.093392+00:00
-
 ---
+doc_id: "article_04"
+title: "Hướng dẫn đăng ký Xét tuyển tài năng 2026"
+source_url: "https://ts.hust.edu.vn/tin-tuc/huong-dan-dang-ky-xet-tuyen-tai-nang-2026"
+source_type: "news"
+document_type: "tin_tuc"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2026"
+published_date: "2026-05-13"
+retrieved_at: "2026-08-04"
+audience: "thi_sinh"
+---
+
+# Hướng dẫn đăng ký Xét tuyển tài năng 2026
 
 # Hướng dẫn đăng ký Xét tuyển tài năng 2026
 **THỜI GIAN TIẾP NHẬN ĐĂNG KÝ**

@@ -1,10 +1,17 @@
-# Hướng dẫn đăng ký xác thực chứng chỉ Ngoại ngữ 2026
-
-**Source:** https://ts.hust.edu.vn/tin-tuc/huong-dan-dang-ky-xac-thuc-chung-chi-ngoai-ngu-2026
-**Published:** 2026-04-14
-**Crawled:** 2026-08-04T08:54:30.507494+00:00
-
 ---
+doc_id: "article_05"
+title: "Hướng dẫn đăng ký xác thực chứng chỉ Ngoại ngữ 2026"
+source_url: "https://ts.hust.edu.vn/tin-tuc/huong-dan-dang-ky-xac-thuc-chung-chi-ngoai-ngu-2026"
+source_type: "news"
+document_type: "tin_tuc"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2026"
+published_date: "2026-04-14"
+retrieved_at: "2026-08-04"
+audience: "thi_sinh"
+---
+
+# Hướng dẫn đăng ký xác thực chứng chỉ Ngoại ngữ 2026
 
 # Hướng dẫn đăng ký xác thực chứng chỉ Ngoại ngữ 2026
 Có điểm thi tốt nghiệp THPT năm 2026 môn tiếng Anh hoặc tiếng Trung (đối với FL3) hoặc tiếng Hàn (đối với FL4) đạt từ 6.5 điểm trở lên.

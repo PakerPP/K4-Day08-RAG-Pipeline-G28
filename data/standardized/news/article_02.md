@@ -1,10 +1,17 @@
-# Thông tin tuyển sinh năm 2026
-
-**Source:** https://www.hust.edu.vn/vi/tuyen-sinh/dai-hoc/de-an-tuyen-sinh-nam-2025-567354.html
-**Published:** 2026-06-25
-**Crawled:** 2026-08-04T08:54:17.000129+00:00
-
 ---
+doc_id: "article_02"
+title: "Thông tin tuyển sinh năm 2026"
+source_url: "https://www.hust.edu.vn/vi/tuyen-sinh/dai-hoc/de-an-tuyen-sinh-nam-2025-567354.html"
+source_type: "news"
+document_type: "tin_tuc"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2026"
+published_date: "2026-06-25"
+retrieved_at: "2026-08-04"
+audience: "both"
+---
+
+# Thông tin tuyển sinh năm 2026
 
 # Thông tin tuyển sinh năm 2026
 Ban TSHN
