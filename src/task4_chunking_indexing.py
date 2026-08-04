@@ -42,6 +42,7 @@ import re
 import chromadb
 from dotenv import load_dotenv
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from openai import OpenAI
 
 load_dotenv()
 
@@ -60,16 +61,12 @@ CHUNK_SIZE = 800
 CHUNK_OVERLAP = 100
 CHUNKING_METHOD = "recursive"  # "recursive" | "markdown_header" | "semantic"
 
-# Embedding chạy local (sentence-transformers) — OPENROUTER_API_KEY không hỗ trợ
-# embedding endpoint, và Gemini free tier (models/gemini-embedding-001) bị giới
-# hạn quota rất chặt trong thực tế (kẹt sau mỗi ~100 chunk, không tự hồi phục).
-# BAAI/bge-m3 chạy qua torch, không giới hạn quota, multilingual tốt cho tiếng Việt.
-# Task 4 và Task 5 bắt buộc dùng đúng model này; nếu đổi model thì phải xoá
-# chroma_db/ và chạy lại index vì dimension khác nhau không tương thích ngược.
+# Gọi embedding online để không phải tải/nạp model local. Task 4 và Task 5 bắt
+# buộc dùng đúng model này; nếu đổi model thì phải chạy lại index.
 EMBEDDING_MODEL = os.getenv(
-    "EMBEDDING_MODEL", "BAAI/bge-m3"
+    "EMBEDDING_MODEL", "text-embedding-3-small"
 )
-EMBEDDING_DIM = 1024
+EMBEDDING_DIM = 1536
 
 # TODO: Chọn vector store
 VECTOR_STORE = "chromadb"  # "chromadb" | "weaviate" | "faiss"
@@ -187,27 +184,24 @@ def chunk_documents(documents: list[dict]) -> list[dict]:
 
 @lru_cache(maxsize=1)
 def get_embedding_model():
-    """Tải SentenceTransformer model một lần, chạy local qua torch (không giới hạn quota)."""
-    from sentence_transformers import SentenceTransformer
-
-    return SentenceTransformer(EMBEDDING_MODEL)
+    """Tạo OpenAI client một lần; key được đọc từ OPENAI_API_KEY trong .env."""
+    if not os.getenv("OPENAI_API_KEY"):
+        raise RuntimeError("Thiếu OPENAI_API_KEY trong file .env")
+    return OpenAI()
 
 
 def embed_texts(texts: list[str]) -> list[list[float]]:
     """Sinh embedding đã chuẩn hoá L2 để cosine similarity ổn định."""
     if not texts:
         return []
-    model = get_embedding_model()
-    # encode_batch_size nhỏ (16) để tránh model.encode() im lặng lâu (không có
-    # tiến độ log nào) khi CPU-only phải xử lý cả trăm chunk dài (~700 ký tự)
-    # trong 1 lệnh gọi — chia nhỏ để thấy tiến độ và giảm áp lực RAM cùng lúc.
-    embeddings = model.encode(
-        texts,
-        batch_size=16,
-        normalize_embeddings=True,
-        show_progress_bar=True,
-    )
-    return embeddings.tolist()
+    client = get_embedding_model()
+    vectors = []
+    for start in range(0, len(texts), 100):
+        response = client.embeddings.create(
+            model=EMBEDDING_MODEL,
+            input=texts[start : start + 100],
+        )
+        vectors.extend(item.embedding for item in response.data)
     return vectors
 
 
@@ -322,25 +316,25 @@ def run_pipeline():
     print("=" * 50)
 
     docs = load_documents()
-    print(f"\nLoaded {len(docs)} documents")
+    print(f"\n✓ Loaded {len(docs)} documents")
 
     chunks = chunk_documents(docs)
-    print(f"Created {len(chunks)} chunks")
+    print(f"✓ Created {len(chunks)} chunks")
 
     # Ghi từng batch ngay sau khi tạo embedding. Nếu tiến trình bị ngắt, chạy lại
     # lệnh sẽ bỏ qua chunk đã có trong ChromaDB thay vì phải gọi API lại từ đầu.
     collection = get_collection()
     existing_ids = set(collection.get(include=[])["ids"])
     pending_chunks = [chunk for chunk in chunks if _chunk_ids([chunk])[0] not in existing_ids]
-    print(f"{len(existing_ids)} chunks da co; con {len(pending_chunks)} chunks can index")
+    print(f"✓ {len(existing_ids)} chunks đã có; còn {len(pending_chunks)} chunks cần index")
 
-    batch_size = 32
+    batch_size = 100
     for start in range(0, len(pending_chunks), batch_size):
         batch = pending_chunks[start : start + batch_size]
         index_to_vectorstore(embed_chunks(batch))
-        print(f"Indexed {min(start + len(batch), len(pending_chunks))}/{len(pending_chunks)} chunks moi")
+        print(f"✓ Indexed {min(start + len(batch), len(pending_chunks))}/{len(pending_chunks)} chunks mới")
 
-    print(f"ChromaDB co {get_collection().count()} chunks")
+    print(f"✓ ChromaDB có {get_collection().count()} chunks")
 
 
 if __name__ == "__main__":

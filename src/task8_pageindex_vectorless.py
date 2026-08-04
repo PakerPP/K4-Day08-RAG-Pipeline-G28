@@ -8,7 +8,7 @@ PageIndex cho phép RAG mà không cần vector store — sử dụng
 structural understanding của document thay vì embedding.
 
 Cài đặt:
-    pip install pageindex
+    pip install pageindex fpdf2
 
 Hướng dẫn:
     1. Đăng ký account tại pageindex.ai
@@ -23,34 +23,55 @@ có field "deprecation" cảnh báo) và trả kết quả trong "retrieved_node
 """
 
 import os
+import time
 from pathlib import Path
 from dotenv import load_dotenv
+from fpdf import FPDF
+from pageindex.client import PageIndexClient
 
 load_dotenv()
 
 PAGEINDEX_API_KEY = os.getenv("PAGEINDEX_API_KEY", "")
 STANDARDIZED_DIR = Path(__file__).parent.parent / "data" / "standardized"
 
+UPLOADED_DOC_IDS = []
+
 
 def upload_documents():
     """
     Upload toàn bộ markdown documents lên PageIndex.
     """
-    # TODO: Implement upload
-    #
-    # Tham khảo: https://github.com/VectifyAI/PageIndex
-    #
-    # from pageindex.client import PageIndexClient
-    #
-    # client = PageIndexClient(api_key=PAGEINDEX_API_KEY)
-    #
-    # for md_file in STANDARDIZED_DIR.rglob("*.md"):
-    #     # Lưu ý: PageIndex nhận PDF, không nhận .md trực tiếp — có thể cần
-    #     # convert markdown sang PDF đơn giản bằng fpdf2 trước khi upload.
-    #     resp = client.submit_document(str(pdf_path))
-    #     doc_id = resp.get("doc_id") or resp.get("id")
-    #     print(f"  ✓ Uploaded: {md_file.name} -> {doc_id}")
-    raise NotImplementedError("Implement upload_documents")
+    global UPLOADED_DOC_IDS
+    client = PageIndexClient(api_key=PAGEINDEX_API_KEY)
+    
+    if not STANDARDIZED_DIR.exists():
+        print(f"⚠ Thư mục không tồn tại: {STANDARDIZED_DIR}")
+        return
+
+    for md_file in STANDARDIZED_DIR.rglob("*.md"):
+        pdf_path = md_file.with_suffix('.pdf')
+        
+        
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Helvetica", size=11)
+        
+        with open(md_file, "r", encoding="utf-8") as f:
+            for line in f:
+                text = line.encode('latin-1', 'replace').decode('latin-1')
+                pdf.multi_cell(0, 7, txt=text)
+                
+        pdf.output(str(pdf_path))
+
+        # Upload tài liệu lên PageIndex
+        try:
+            resp = client.submit_document(str(pdf_path))
+            doc_id = resp.get("doc_id") or resp.get("id")
+            if doc_id:
+                UPLOADED_DOC_IDS.append(doc_id)
+                print(f"  ✓ Uploaded: {md_file.name} -> {doc_id}")
+        except Exception as e:
+            print(f"  ✗ Lỗi khi upload {md_file.name}: {e}")
 
 
 def pageindex_search(query: str, top_k: int = 5) -> list[dict]:
@@ -70,30 +91,50 @@ def pageindex_search(query: str, top_k: int = 5) -> list[dict]:
             'source': 'pageindex'   # Đánh dấu nguồn retrieval
         }
     """
-    # TODO: Implement PageIndex query
-    #
-    # from pageindex.client import PageIndexClient
-    #
-    # client = PageIndexClient(api_key=PAGEINDEX_API_KEY)
-    # resp = client.submit_query(doc_id=doc_id, query=query)
-    # retrieval_id = resp.get("retrieval_id") or resp.get("id")
-    #
-    # # Poll cho đến khi status == "completed"
-    # retrieval = client.get_retrieval(retrieval_id)
-    #
-    # # Parse retrieval["retrieved_nodes"] — mỗi node có "relevant_contents"
-    # results = []
-    # for node in retrieval.get("retrieved_nodes", [])[:2]:
-    #     for group in node.get("relevant_contents", []):
-    #         for item in group:
-    #             results.append({
-    #                 "content": item.get("relevant_content", ""),
-    #                 "score": ...,  # PageIndex không trả score trực tiếp — tự gán theo rank
-    #                 "metadata": {"section": item.get("section_title")},
-    #                 "source": "pageindex",
-    #             })
-    # return results[:top_k]
-    raise NotImplementedError("Implement pageindex_search")
+    global UPLOADED_DOC_IDS
+    client = PageIndexClient(api_key=PAGEINDEX_API_KEY)
+    results = []
+
+    for doc_id in UPLOADED_DOC_IDS:
+        try:
+            resp = client.submit_query(doc_id=doc_id, query=query)
+            retrieval_id = resp.get("retrieval_id") or resp.get("id")
+            
+            if not retrieval_id:
+                continue
+                
+            # Poll cho đến khi status == "completed"
+            retrieval = {}
+            while True:
+                retrieval = client.get_retrieval(retrieval_id)
+                status = retrieval.get("status", "").lower()
+                if status == "completed" or status in ["failed", "error"]:
+                    break
+                time.sleep(2)
+                
+            if retrieval.get("status", "").lower() != "completed":
+                continue
+
+            # Parse retrieval["retrieved_nodes"] — mỗi node có "relevant_contents"
+            rank = 1
+            for node in retrieval.get("retrieved_nodes", [])[:2]:
+                for group in node.get("relevant_contents", []):
+                    for item in group:
+                        content = item.get("relevant_content", "")
+                        if content:
+                            results.append({
+                                "content": content,
+                                "score": max(1.0 - (rank * 0.05), 0.1),  # Tự gán theo rank
+                                "metadata": {"section": item.get("section_title")},
+                                "source": "pageindex",
+                            })
+                            rank += 1
+        except Exception as e:
+            print(f"Lỗi khi truy vấn doc_id {doc_id}: {e}")
+
+    # Sắp xếp và trả về top_k
+    results = sorted(results, key=lambda x: x["score"], reverse=True)
+    return results[:top_k]
 
 
 if __name__ == "__main__":

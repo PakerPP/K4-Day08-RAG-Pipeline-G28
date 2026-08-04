@@ -96,7 +96,7 @@ def rerank_mmr(
     return [candidates[i] for i in selected]
     
 def rerank_rrf(
-    ranked_lists: list[list[dict]], top_k: int = 5, k: int = 60
+    ranked_lists: list[list[dict]] | list[dict], top_k: int = 5, k: int = 60
 ) -> list[dict]:
     """
     Reciprocal Rank Fusion — gộp kết quả từ nhiều ranker.
@@ -111,22 +111,40 @@ def rerank_rrf(
     Returns:
         List of top_k candidates sorted by RRF score descending.
     """
-    rrf_scores = {}  # content -> score
-    content_map = {}  # content -> full dict
+    if not ranked_lists or top_k <= 0:
+        return []
+    if k < 0:
+        raise ValueError("k phải >= 0")
+
+    # rerank() nhận candidates phẳng, còn Task 9 đưa nhiều ranked lists. Hỗ trợ
+    # cả hai để interface public không lỗi, nhưng fusion thực sự xảy ra ở Task 9.
+    if isinstance(ranked_lists[0], dict):
+        ranked_lists = [ranked_lists]
+
+    rrf_scores = {}  # chunk_id/content -> score
+    item_map = {}  # key -> full dict
     
     for ranked_list in ranked_lists:
         for rank, item in enumerate(ranked_list, 1):
-            key = item["content"]
+            metadata = item.get("metadata") or {}
+            # Task 4/5/6 cùng trả chunk_id. Dùng nó thay content để deduplicate
+            # chính xác ngay cả khi hai chunk có text trùng nhau.
+            key = metadata.get("chunk_id") or item.get("id") or item["content"]
             rrf_scores[key] = rrf_scores.get(key, 0) + 1 / (k + rank)
-            content_map[key] = item
+            if key not in item_map:
+                item_map[key] = item
     
     # Sort by RRF score
     sorted_items = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)
     
     results = []
-    for content, score in sorted_items[:top_k]:
-        item = content_map[content].copy()
-        item["score"] = score
+    for key, score in sorted_items[:top_k]:
+        item = item_map[key].copy()
+        item["score"] = round(score, 8)
+        item["metadata"] = {
+            **(item.get("metadata") or {}),
+            "rrf_score": round(score, 8),
+        }
         results.append(item)
     
     return results
@@ -164,10 +182,9 @@ def rerank(
         return rerank_mmr(query_embedding, candidates, top_k=top_k)
 
     elif method == "rrf":
-        # candidates ở đây là 1 list đã merge sẵn (Task 9 gọi rerank_rrf() để
-        # merge dense+sparse trước khi gọi rerank()) — không phải list-of-lists
-        # nên không merge lại từ đầu, chỉ cắt về top_k theo score đã có.
-        return sorted(candidates, key=lambda c: c["score"], reverse=True)[:top_k]
+        # Với một list đã fusion ở Task 9, giữ nguyên điểm RRF đã tính; dùng
+        # rerank_rrf([dense_results, sparse_results]) khi cần fusion nhiều ranker.
+        return sorted(candidates, key=lambda item: item.get("score", 0), reverse=True)[:top_k]
     else:
         raise ValueError(f"Unknown rerank method: {method}")
 
