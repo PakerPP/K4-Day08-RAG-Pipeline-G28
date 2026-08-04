@@ -159,12 +159,15 @@ def rerank(
         return rerank_cross_encoder(query, candidates, top_k)
     elif method == "mmr":
         # Cần query_embedding - embed query trước
-        query_embedding = get_embedding_from_sentence_transformers(query)
+        from .task4_chunking_indexing import embed_texts
+        query_embedding = embed_texts([query])[0]
         return rerank_mmr(query_embedding, candidates, top_k=top_k)
-        
+
     elif method == "rrf":
-        # RRF cần nhiều ranked lists - gọi riêng
-        return rerank_rrf(candidates, top_k=top_k)
+        # candidates ở đây là 1 list đã merge sẵn (Task 9 gọi rerank_rrf() để
+        # merge dense+sparse trước khi gọi rerank()) — không phải list-of-lists
+        # nên không merge lại từ đầu, chỉ cắt về top_k theo score đã có.
+        return sorted(candidates, key=lambda c: c["score"], reverse=True)[:top_k]
     else:
         raise ValueError(f"Unknown rerank method: {method}")
 
