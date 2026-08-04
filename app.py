@@ -55,6 +55,11 @@ with st.sidebar:
     st.divider()
     st.subheader("⚙️ Thiết lập")
     top_k = st.slider("Số chunks retrieval (top_k)", 3, 10, 5)
+    show_retrieval_debug = st.checkbox(
+        "Hiển thị kết quả retrieval",
+        value=False,
+        help="Dùng ở CP2 để đối chiếu Semantic Search và BM25 trước khi ghép pipeline.",
+    )
 
     st.divider()
     st.caption("**Kiến trúc hệ thống:**")
@@ -68,6 +73,25 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "pending_query" not in st.session_state:
     st.session_state.pending_query = None
+
+
+def render_retrieval_results(title: str, results: list[dict]) -> None:
+    """Hiển thị thống nhất kết quả từ Semantic Search hoặc BM25.
+
+    Hàm chỉ phụ thuộc vào interface chung ``content``, ``score`` và ``metadata``
+    để TV2/TV3 có thể bàn giao module retrieval độc lập với UI.
+    """
+    st.markdown(f"#### {title}")
+    if not results:
+        st.caption("Không có kết quả phù hợp.")
+        return
+
+    for index, result in enumerate(results, start=1):
+        metadata = result.get("metadata") or {}
+        source = metadata.get("source", "Unknown source")
+        score = float(result.get("score", 0.0))
+        st.markdown(f"**[{index}] {source}** — score: `{score:.4f}`")
+        st.caption(result.get("content", "")[:350])
 
 # =============================================================================
 # MAIN CHAT AREA
@@ -108,6 +132,32 @@ if query:
 
     # Sinh câu trả lời từ RAG Pipeline
     with st.chat_message("assistant"):
+        # CP2: cho phép đối chiếu hai ranker độc lập trước khi Task 9 ghép
+        # Hybrid Retrieval. Lỗi từ module chưa hoàn thiện được giữ trong expander
+        # để luồng chat không bị dừng.
+        if show_retrieval_debug:
+            with st.expander("🔎 Kết quả retrieval (CP2)", expanded=True):
+                dense_col, lexical_col = st.columns(2)
+                try:
+                    from src.task5_semantic_search import semantic_search
+
+                    dense_results = semantic_search(query, top_k=top_k)
+                    with dense_col:
+                        render_retrieval_results("Semantic Search", dense_results)
+                except Exception as exc:
+                    with dense_col:
+                        st.warning(f"Semantic Search chưa sẵn sàng: {exc}")
+
+                try:
+                    from src.task6_lexical_search import lexical_search
+
+                    lexical_results = lexical_search(query, top_k=top_k)
+                    with lexical_col:
+                        render_retrieval_results("BM25 Lexical Search", lexical_results)
+                except Exception as exc:
+                    with lexical_col:
+                        st.warning(f"BM25 chưa sẵn sàng: {exc}")
+
         with st.spinner("Đang tìm kiếm tài liệu và tổng hợp câu trả lời..."):
             try:
                 # TODO (Học viên): Tích hợp hàm sinh câu trả lời từ Task 10
