@@ -1,0 +1,12 @@
+Collecting fpdf2
+  Using cached fpdf2-2.8.7-py3-none-any.whl.metadata (81 kB)
+Requirement already satisfied: defusedxml in .\.venv\Lib\site-packages (from fpdf2) (0.7.1)
+Requirement already satisfied: Pillow!=9.2.*,>=8.3.2 in .\.venv\Lib\site-packages (from fpdf2) (12.3.0)
+Collecting fonttools>=4.34.0 (from fpdf2)
+  Using cached fonttools-4.63.0-cp312-cp312-win_amd64.whl.metadata (121 kB)
+Downloading fpdf2-2.8.7-py3-none-any.whl (327 kB)
+Downloading fonttools-4.63.0-cp312-cp312-win_amd64.whl (2.3 MB)
+   ---------------------------------------- 2.3/2.3 MB 870.7 kB/s  0:00:02
+Installing collected packages: fonttools, fpdf2
+
+Successfully installed fonttools-4.63.0 fpdf2-2.8.7
