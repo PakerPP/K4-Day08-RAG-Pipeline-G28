@@ -216,11 +216,6 @@ with st.sidebar:
     st.divider()
     st.subheader("⚙️ Thiết lập")
     top_k = st.slider("Số chunks retrieval (top_k)", 3, 10, 5)
-    response_mode = st.radio(
-        "Nguồn phản hồi",
-        options=("Mock demo (CP5)", "Pipeline thật (Task 10)"),
-        help="Mock demo giúp TV4 hoàn thiện và trình diễn UI trước khi các module retrieval bàn giao.",
-    )
     show_retrieval_debug = st.checkbox(
         "Hiển thị kết quả retrieval",
         value=False,
@@ -242,91 +237,6 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "pending_query" not in st.session_state:
     st.session_state.pending_query = None
-
-
-# Dữ liệu demo CP5 dùng cùng schema với Task 9/10 để có thể thay bằng pipeline
-# thật mà không cần sửa UI. Nội dung chỉ dùng để trình diễn giao diện.
-MOCK_SOURCES = {
-    "score": {
-        "content": "Theo điểm chuẩn BKHN năm 2025 bằng điểm thi THPT, ngành IT1 — CNTT: Khoa học Máy tính có điểm chuẩn 29,19 cho các tổ hợp A00, A01; môn chính là Toán.",
-        "score": 0.95,
-        "metadata": {"source": "diem_chuan_2025.md", "type": "cutoff-score"},
-        "source": "hybrid",
-    },
-    "methods": {
-        "content": "Thông tin tuyển sinh đại học chính quy BKHN năm 2026 dự kiến 9.880 chỉ tiêu và duy trì ba phương thức: Xét tuyển tài năng, xét tuyển theo điểm Đánh giá tư duy (TSA), và xét tuyển theo điểm thi tốt nghiệp THPT.",
-        "score": 0.93,
-        "metadata": {"source": "thong-tin-tuyen-sinh-2026.md", "type": "admissions-plan"},
-        "source": "hybrid",
-    },
-    "talent": {
-        "content": "Xét tuyển tài năng (XTTN) năm 2026 gồm: diện 1.1 xét tuyển thẳng theo quy định của Bộ GD&ĐT; diện 1.2 dựa trên chứng chỉ quốc tế; và diện 1.3 dựa theo hồ sơ năng lực kết hợp phỏng vấn.",
-        "score": 0.91,
-        "metadata": {"source": "quy-dinh-xttn-2026.md", "type": "admissions-regulation"},
-        "source": "hybrid",
-    },
-    "international": {
-        "content": "Diện XTTN 1.2 dành cho thí sinh có điểm trung bình các môn văn hóa lớp 10, 11, 12 từ 8,00 trở lên và có ít nhất một chứng chỉ quốc tế còn hiệu lực như SAT, ACT, A-Level, AP hoặc IB.",
-        "score": 0.88,
-        "metadata": {"source": "quy-dinh-xttn-2026.md", "type": "admissions-regulation"},
-        "source": "hybrid",
-    },
-    "timeline": {
-        "content": "Theo hướng dẫn XTTN 2026, hệ thống đăng ký trực tuyến mở từ 18/5 đến hết 31/5/2026 cho diện 1.2 và 1.3; diện 1.1 mở đến hết 20/6/2026 theo quy định của Bộ GD&ĐT.",
-        "score": 0.76,
-        "metadata": {"section": "Mốc thời gian XTTN 2026", "type": "admissions-guide"},
-        "source": "pageindex",
-    },
-}
-
-
-def build_mock_response(query: str, top_k: int) -> dict:
-    """Trả response demo có citation theo đúng interface của Task 10."""
-    normalized = query.lower()
-    if any(word in normalized for word in ("điểm chuẩn", "it1", "khoa học máy tính")):
-        selected = [MOCK_SOURCES["score"], MOCK_SOURCES["methods"]]
-        answer = (
-            "Điểm chuẩn năm 2025 theo phương thức điểm thi THPT của ngành IT1 — CNTT: "
-            "Khoa học Máy tính là **29,19** cho các tổ hợp A00, A01; môn chính là Toán. "
-            "[diem_chuan_2025.md]"
-        )
-    elif any(word in normalized for word in ("phương thức", "tsa", "đánh giá tư duy", "thpt")):
-        selected = [MOCK_SOURCES["methods"], MOCK_SOURCES["talent"]]
-        answer = (
-            "BKHN năm 2026 duy trì ba phương thức: Xét tuyển tài năng, xét tuyển theo "
-            "điểm Đánh giá tư duy (TSA), và xét tuyển theo điểm thi tốt nghiệp THPT. "
-            "[thong-tin-tuyen-sinh-2026.md]"
-        )
-    elif any(word in normalized for word in ("tài năng", "xttn", "phỏng vấn")):
-        selected = [MOCK_SOURCES["talent"], MOCK_SOURCES["international"]]
-        answer = (
-            "Xét tuyển tài năng gồm ba diện: xét tuyển thẳng (1.1), xét tuyển dựa trên "
-            "chứng chỉ quốc tế (1.2), và hồ sơ năng lực kết hợp phỏng vấn (1.3). "
-            "[quy-dinh-xttn-2026.md]"
-        )
-    elif any(word in normalized for word in ("chứng chỉ", "sat", "act", "a-level", "ib")):
-        selected = [MOCK_SOURCES["international"], MOCK_SOURCES["talent"]]
-        answer = (
-            "Để xét tuyển tài năng diện 1.2, thí sinh cần có điểm trung bình các môn văn "
-            "hóa lớp 10–12 từ 8,00 trở lên và ít nhất một chứng chỉ quốc tế hợp lệ. "
-            "[quy-dinh-xttn-2026.md]"
-        )
-    else:
-        selected = [MOCK_SOURCES["timeline"]]
-        answer = (
-            "Câu hỏi này đang được mô phỏng bằng vectorless fallback. Với XTTN 2026, diện "
-            "1.2 và 1.3 đăng ký từ 18/5 đến hết 31/5; diện 1.1 đến hết 20/6. "
-            "[Mốc thời gian XTTN 2026]"
-        )
-
-    sources = [dict(source, metadata=dict(source["metadata"])) for source in selected[:top_k]]
-    mode = get_retrieval_mode(sources)
-    return {
-        "answer": answer,
-        "sources": sources,
-        "retrieval_source": mode,
-        "retrieval_mode": mode,
-    }
 
 
 def render_retrieval_results(title: str, results: list[dict]) -> None:
@@ -437,41 +347,39 @@ if query:
         if show_retrieval_debug:
             with st.expander("🔎 Kết quả retrieval (CP2)", expanded=True):
                 dense_col, lexical_col = st.columns(2)
-                if response_mode == "Mock demo (CP5)":
-                    mock_results = build_mock_response(query, top_k)["sources"]
+                try:
+                    from src.task5_semantic_search import semantic_search
+
+                    dense_results = semantic_search(query, top_k=top_k)
                     with dense_col:
-                        render_retrieval_results("Semantic Search (mock)", mock_results)
+                        render_retrieval_results("Semantic Search", dense_results)
+                except Exception as exc:
+                    with dense_col:
+                        st.warning(f"Semantic Search chưa sẵn sàng: {exc}")
+
+                try:
+                    from src.task6_lexical_search import lexical_search
+
+                    lexical_results = lexical_search(query, top_k=top_k)
                     with lexical_col:
-                        render_retrieval_results("BM25 Lexical Search (mock)", mock_results[::-1])
-                else:
-                    try:
-                        from src.task5_semantic_search import semantic_search
-
-                        dense_results = semantic_search(query, top_k=top_k)
-                        with dense_col:
-                            render_retrieval_results("Semantic Search", dense_results)
-                    except Exception as exc:
-                        with dense_col:
-                            st.warning(f"Semantic Search chưa sẵn sàng: {exc}")
-
-                    try:
-                        from src.task6_lexical_search import lexical_search
-
-                        lexical_results = lexical_search(query, top_k=top_k)
-                        with lexical_col:
-                            render_retrieval_results("BM25 Lexical Search", lexical_results)
-                    except Exception as exc:
-                        with lexical_col:
-                            st.warning(f"BM25 chưa sẵn sàng: {exc}")
+                        render_retrieval_results("BM25 Lexical Search", lexical_results)
+                except Exception as exc:
+                    with lexical_col:
+                        st.warning(f"BM25 chưa sẵn sàng: {exc}")
 
         with st.spinner("Đang tìm kiếm tài liệu và tổng hợp câu trả lời..."):
             try:
-                if response_mode == "Mock demo (CP5)":
-                    response = build_mock_response(query, top_k=top_k)
-                else:
-                    from src.task10_generation import generate_with_citation
+                from src.task10_generation import generate_with_citation
 
-                    response = generate_with_citation(query, top_k=top_k)
+                # Lịch sử hội thoại (trừ câu hỏi vừa gửi ở trên) để LLM hiểu
+                # follow-up question, ví dụ "còn ngành đó thì học phí bao nhiêu?".
+                chat_history = [
+                    {"role": msg["role"], "content": msg["content"]}
+                    for msg in st.session_state.messages[:-1]
+                ]
+                response = generate_with_citation(
+                    query, top_k=top_k, chat_history=chat_history
+                )
                 answer = response.get("answer", "Chưa thể trả lời.")
                 sources = response.get("sources", [])
                 retrieval_mode = get_retrieval_mode(

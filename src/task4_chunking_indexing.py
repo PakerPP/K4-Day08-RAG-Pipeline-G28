@@ -174,9 +174,24 @@ def chunk_documents(documents: list[dict]) -> list[dict]:
     chunks = []
     for doc in documents:
         splits = splitter.split_text(doc["content"])
+        # Markdown "## Heading" (vd "Điểm chuẩn theo phương thức Điểm thi THPT
+        # năm 2025") thường tách thành 1 chunk riêng ở boundary \n\n, mất liên
+        # kết với các chunk bảng dữ liệu theo sau — retrieval trả về đúng dòng
+        # "IT1 | 29.19" nhưng không biết đó là phương thức nào. Prepend heading
+        # gần nhất vào mỗi chunk không tự mang theo, để cả dense và BM25 giữ
+        # được ngữ cảnh "phương thức nào" trong từng chunk độc lập.
+        current_heading = ""
         for i, chunk_text in enumerate(splits):
+            stripped = chunk_text.strip()
+            if stripped.startswith("#"):
+                current_heading = stripped.splitlines()[0]
+                content = chunk_text
+            elif current_heading and current_heading not in chunk_text:
+                content = f"{current_heading}\n\n{chunk_text}"
+            else:
+                content = chunk_text
             chunks.append({
-                "content": chunk_text,
+                "content": content,
                 "metadata": {**doc["metadata"], "chunk_index": i}
             })
     return chunks
