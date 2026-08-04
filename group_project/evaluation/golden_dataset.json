@@ -1,17 +1,77 @@
 [
   {
-    "question": "Người mua có thể yêu cầu trả hàng/hoàn tiền trong thời hạn bao lâu sau khi nhận hàng?",
-    "expected_answer": "Trong vòng 15 ngày kể từ khi giao hàng thành công (24 giờ đối với thực phẩm tươi sống/đông lạnh).",
-    "expected_context": "Trang Returns and Refunds Policy, mục Return/Refund Eligibility"
+    "question": "Điểm chuẩn ngành CNTT: Khoa học Máy tính (IT1) của Đại học Bách Khoa Hà Nội năm 2025 theo phương thức điểm thi THPT là bao nhiêu?",
+    "expected_answer": "29.19 điểm (tổ hợp A00/A01, môn chính Toán; hoặc tổ hợp B03/C01/C02/X02).",
+    "expected_context": "diem_chuan_2025.md, mục Điểm chuẩn theo phương thức Điểm thi THPT năm 2025"
   },
   {
-    "question": "Shopee hỗ trợ những phương thức thanh toán nào?",
-    "expected_answer": "ShopeePay Wallet, thẻ tín dụng/ghi nợ, trả góp qua thẻ, QR Code, chuyển khoản qua app ngân hàng, thẻ NAPAS, Apple Pay, Google Pay, và COD.",
-    "expected_context": "Trang Payment Methods Overview"
+    "question": "So sánh điểm chuẩn ngành Khoa học Máy tính (IT1) của Bách Khoa Hà Nội qua 3 năm 2023, 2024, 2025 theo phương thức điểm thi THPT.",
+    "expected_answer": "2023: 29.42 điểm; 2024: 28.53 điểm; 2025: 29.19 điểm. Điểm giảm nhẹ vào 2024 rồi tăng trở lại vào 2025.",
+    "expected_context": "diem_chuan_2023.md, diem_chuan_2024.md, diem_chuan_2025.md"
   },
   {
-    "question": "Người bán không được đăng bán những sản phẩm nào?",
-    "expected_answer": "Hàng giả/nhái, sản phẩm bất hợp pháp, vi phạm sở hữu trí tuệ, và các mặt hàng nằm trong danh sách cấm của sàn.",
-    "expected_context": "Trang Product Listing Regulations, mục Prohibited Content"
+    "question": "Ngành Khoa học dữ liệu và Trí tuệ nhân tạo (IT-E10, chương trình tiên tiến) có điểm chuẩn năm 2025 theo phương thức điểm thi THPT là bao nhiêu?",
+    "expected_answer": "29.39 điểm (tổ hợp A00/A01 hoặc B03/C01/C02/X02, môn chính Toán).",
+    "expected_context": "diem_chuan_2025.md, mục Điểm chuẩn theo phương thức Điểm thi THPT năm 2025"
+  },
+  {
+    "question": "Điểm chuẩn ngành Quản trị Kinh doanh (EM3) của Bách Khoa Hà Nội năm 2023 theo phương thức điểm thi là bao nhiêu?",
+    "expected_answer": "25.83 điểm (tổ hợp A00/A01/D01).",
+    "expected_context": "diem_chuan_2023.md, mục Điểm chuẩn trúng tuyển theo phương thức điểm thi năm 2023"
+  },
+  {
+    "question": "Ngành Kỹ thuật Điều khiển - Tự động hóa (EE2) có điểm chuẩn cao nhất ở phương thức nào trong năm 2025?",
+    "expected_answer": "Phương thức xét tuyển kết hợp (hồ sơ năng lực kết hợp phỏng vấn), đạt 85.44 điểm — cao hơn phương thức điểm thi THPT (28.48) và đánh giá tư duy (76.43).",
+    "expected_context": "diem_chuan_2025.md, các mục Điểm thi THPT / Đánh giá tư duy / Xét tuyển kết hợp năm 2025"
+  },
+  {
+    "question": "Đại học Bách Khoa Hà Nội tuyển sinh năm 2026 dự kiến bao nhiêu chỉ tiêu và có mấy phương thức xét tuyển chính?",
+    "expected_answer": "Tổng chỉ tiêu dự kiến 9.880 sinh viên, duy trì 3 phương thức tuyển sinh chính như các năm trước, trong đó có Phương thức xét tuyển tài năng (XTTN) gồm nhiều diện nhỏ (xét tuyển thẳng theo quy định Bộ GD&ĐT, hồ sơ năng lực kết hợp phỏng vấn, chứng chỉ quốc tế...).",
+    "expected_context": "dai-hoc-bach-khoa-ha-noi-bka.md, mục Đề án tuyển sinh Đại Học Bách Khoa Hà Nội 2026"
+  },
+  {
+    "question": "Ngành Kỹ thuật Y sinh (ET2) của Bách Khoa Hà Nội năm 2023 có điểm chuẩn bao nhiêu theo phương thức điểm thi?",
+    "expected_answer": "25.04 điểm (tổ hợp A00/A01/B00).",
+    "expected_context": "diem_chuan_2023.md, mục Điểm chuẩn trúng tuyển theo phương thức điểm thi năm 2023"
+  },
+  {
+    "question": "Phương thức chứng chỉ quốc tế (CCQT) năm 2025, ngành An toàn không gian số (IT-E15) có điểm chuẩn bao nhiêu?",
+    "expected_answer": "82.32 điểm.",
+    "expected_context": "diem_chuan_2025.md, mục Điểm chuẩn theo phương thức chứng chỉ quốc tế năm 2025"
+  },
+  {
+    "question": "Ngành Kế toán (EM4) của Bách Khoa Hà Nội năm 2024 theo phương thức điểm thi THPT có điểm chuẩn bao nhiêu?",
+    "expected_answer": "24.63 điểm (tổ hợp A00/A01/B03/C01/C02/X02, môn chính Toán).",
+    "expected_context": "diem_chuan_2024.md, mục Điểm chuẩn theo phướng thức Điểm thi năm 2024"
+  },
+  {
+    "question": "Điểm chuẩn ngành Công nghệ Dệt - May (TX1) năm 2023 là bao nhiêu, có phải ngành thấp điểm nhất không?",
+    "expected_answer": "21.40 điểm theo phương thức điểm thi năm 2023, là một trong các ngành có điểm chuẩn thấp trong danh sách (cùng nhóm với Kỹ thuật Môi trường EV1/EV2 ở mức 21.00).",
+    "expected_context": "diem_chuan_2023.md, mục Điểm chuẩn trúng tuyển theo phương thức điểm thi năm 2023"
+  },
+  {
+    "question": "So sánh học phí và chỉ tiêu ngành Khoa học Máy tính giữa VinUni và RMIT.",
+    "expected_answer": "KHÔNG CÓ DỮ LIỆU — chưa thu thập tài liệu tuyển sinh của VinUni và RMIT. Kỳ vọng hệ thống trả lời 'I cannot verify this information' hoặc kích hoạt fallback do không tìm thấy nguồn phù hợp.",
+    "expected_context": "Không có — câu hỏi kiểm tra khả năng từ chối trả lời khi thiếu evidence (negative test case)."
+  },
+  {
+    "question": "Điều kiện xét tuyển thẳng bằng chứng chỉ IELTS vào Đại học Bách Khoa Hà Nội năm nay như thế nào?",
+    "expected_answer": "Nằm trong diện Xét tuyển tài năng (XTTN), phương thức Chứng chỉ quốc tế — tài liệu hiện có chỉ nêu tên phương thức, chưa có chi tiết ngưỡng điểm IELTS cụ thể; cần bổ sung thêm tài liệu chi tiết về điều kiện xét tuyển tài năng.",
+    "expected_context": "dai-hoc-bach-khoa-ha-noi-bka.md, mục Phương án tuyển sinh > Chứng chỉ quốc tế (thông tin còn thiếu chi tiết ngưỡng điểm)"
+  },
+  {
+    "question": "Ngành Công nghệ thông tin Global ICT (IT-E7) có điểm chuẩn tăng hay giảm từ 2023 đến 2025 theo phương thức điểm thi THPT?",
+    "expected_answer": "2023: 28.16 điểm; 2025: 28.66 điểm — tăng nhẹ 0.5 điểm qua các năm (dữ liệu 2024 không xuất hiện trong bảng điểm thi THPT của diem_chuan_2024.md).",
+    "expected_context": "diem_chuan_2023.md, diem_chuan_2025.md"
+  },
+  {
+    "question": "Ngành Quản lý Tài nguyên và Môi trường (EV2) năm 2025 theo phương thức đánh giá tư duy có điểm chuẩn bao nhiêu?",
+    "expected_answer": "51.19 điểm.",
+    "expected_context": "diem_chuan_2025.md, mục Điểm chuẩn theo phương thức điểm đánh giá tư duy năm 2025"
+  },
+  {
+    "question": "Đại học Bách Khoa Hà Nội có chương trình hợp tác đào tạo Kỹ thuật Ô tô với đại học nước ngoài nào không, điểm chuẩn 2025 bao nhiêu?",
+    "expected_answer": "Có, chương trình Kỹ thuật Ô tô (CT tiên tiến, mã TE-E2) — điểm chuẩn 2025 theo phương thức điểm thi THPT là 25.18 điểm. Ngoài ra còn chương trình Cơ khí hàng không Việt-Pháp (PFIEV) và các chương trình hợp tác với ĐH Leibniz Hannover (Đức), ĐH Griffith (Úc), ĐH Nagaoka (Nhật Bản) ở các ngành kỹ thuật khác.",
+    "expected_context": "diem_chuan_2025.md, mục Điểm chuẩn theo phương thức Điểm thi THPT năm 2025"
   }
 ]
