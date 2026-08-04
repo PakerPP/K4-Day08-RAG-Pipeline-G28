@@ -137,8 +137,13 @@ def _answer_without_llm(chunks: list[dict]) -> str:
     )
 
 
-def _generate_answer(user_message: str) -> str | None:
-    """Gọi OpenRouter hoặc OpenAI; trả ``None`` nếu chưa có API key."""
+def _generate_answer(user_message: str, chat_history: list[dict] | None = None) -> str | None:
+    """Gọi OpenRouter hoặc OpenAI; trả ``None`` nếu chưa có API key.
+
+    chat_history: các lượt hỏi-đáp trước đó [{'role': 'user'|'assistant', 'content': str}]
+    để LLM hiểu ngữ cảnh follow-up (vd "còn ngành đó thì sao?" tham chiếu câu trước).
+    Chỉ dùng vài lượt gần nhất — history dài làm loãng context retrieval hiện tại.
+    """
     openrouter_key = os.getenv("OPENROUTER_API_KEY")
     openai_key = os.getenv("OPENAI_API_KEY")
     if not openrouter_key and not openai_key:
@@ -153,12 +158,13 @@ def _generate_answer(user_message: str) -> str | None:
         client = OpenAI(api_key=openai_key)
         model = os.getenv("OPENAI_MODEL", LLM_MODEL.removeprefix("openai/"))
 
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    messages.extend(chat_history or [])
+    messages.append({"role": "user", "content": user_message})
+
     response = client.chat.completions.create(
         model=model,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_message},
-        ],
+        messages=messages,
         temperature=TEMPERATURE,
         top_p=TOP_P,
     )
@@ -169,7 +175,14 @@ def _generate_answer(user_message: str) -> str | None:
 # GENERATION
 # =============================================================================
 
-def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
+# Số lượt hỏi-đáp gần nhất đưa vào LLM làm ngữ cảnh follow-up. Giới hạn thấp vì
+# history dài cạnh tranh attention với context retrieval của câu hỏi hiện tại.
+MAX_HISTORY_TURNS = 3
+
+
+def generate_with_citation(
+    query: str, top_k: int = TOP_K, chat_history: list[dict] | None = None
+) -> dict:
     """
     End-to-end RAG generation có citation.
 
@@ -177,12 +190,18 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
         1. Retrieve relevant chunks
         2. Reorder để tránh lost in the middle
         3. Format context với source labels
-        4. Build prompt (system + context + query)
+        4. Build prompt (system + context + query + chat_history)
         5. Call LLM
         6. Return answer + sources
 
     Args:
         query: Câu hỏi của user
+        top_k: Số chunks retrieval
+        chat_history: Lịch sử hội thoại trước đó, dạng
+            [{'role': 'user'|'assistant', 'content': str}, ...] theo thứ tự
+            thời gian tăng dần — dùng để trả lời follow-up questions (vd
+            "còn ngành đó thì học phí bao nhiêu?"). Chỉ ``MAX_HISTORY_TURNS``
+            lượt gần nhất được dùng; truyền None/rỗng nếu là câu hỏi độc lập.
 
     Returns:
         {
@@ -205,13 +224,14 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
     reordered = reorder_for_llm(chunks)
     context = format_context(reordered)
     retrieval_source = chunks[0].get("source", "hybrid") if chunks else "none"
+    trimmed_history = (chat_history or [])[-(MAX_HISTORY_TURNS * 2):]
 
     if not context:
         answer = "Tôi không thể xác minh thông tin này từ nguồn hiện có."
     else:
         user_message = f"Context:\n{context}\n\n---\n\nQuestion: {query.strip()}"
         try:
-            answer = _generate_answer(user_message)
+            answer = _generate_answer(user_message, chat_history=trimmed_history)
         except Exception:
             # Không biến lỗi quota/network thành thông tin tự bịa.
             answer = None

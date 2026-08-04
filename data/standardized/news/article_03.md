@@ -1,10 +1,17 @@
-# Quy chế tuyển sinh đại học năm 2026
-
-**Source:** https://ts.hust.edu.vn/index.php/tin-tuc/quy-che-tuyen-sinh-dai-hoc-nam-2026
-**Published:** 2026-05-26
-**Crawled:** 2026-08-04T08:54:21.952571+00:00
-
 ---
+doc_id: "article_03"
+title: "Quy chế tuyển sinh đại học năm 2026"
+source_url: "https://ts.hust.edu.vn/index.php/tin-tuc/quy-che-tuyen-sinh-dai-hoc-nam-2026"
+source_type: "news"
+document_type: "quy_dinh"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2026"
+published_date: "2026-05-26"
+retrieved_at: "2026-08-04"
+audience: "both"
+---
+
+# Quy chế tuyển sinh đại học năm 2026
 
 # Quy chế tuyển sinh đại học năm 2026
 Nhằm đảm bảo tính minh bạch và thống nhất, Đại học Bách khoa Hà Nội vừa chính thức ban hành Quy chế tuyển sinh đại học và Quy định về phương thức Xét tuyển tài năng (XTTN) năm 2026. 

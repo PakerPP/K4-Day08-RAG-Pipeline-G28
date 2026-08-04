@@ -549,9 +549,62 @@ run_dashboard()
 
 ### Kiến Trúc Hệ Thống
 
+```mermaid
+flowchart TD
+    subgraph Data["Thu thập & Chuẩn hoá dữ liệu"]
+        T1["Task 1: Legal PDF<br/>(đề án, quy định tuyển sinh)"]
+        T2["Task 2: Crawl News<br/>(bài viết HUST chính thức)"]
+        T3["Task 3: MarkItDown<br/>→ Markdown chuẩn hoá"]
+        T1 --> T3
+        T2 --> T3
+    end
+
+    subgraph Index["Chunking & Indexing"]
+        T4["Task 4: RecursiveCharacterTextSplitter<br/>size=800, overlap=100<br/>+ OpenAI text-embedding-3-small"]
+        Chroma[("ChromaDB<br/>1047 chunks")]
+        T4 --> Chroma
+    end
+
+    T3 --> T4
+
+    subgraph Retrieval["Hybrid Retrieval — Task 9"]
+        Q["User Query"]
+        T5["Task 5: Semantic Search<br/>(cosine similarity)"]
+        T6["Task 6: Lexical Search<br/>(BM25)"]
+        T7["Task 7: RRF Merge + Rerank"]
+        Thresh{"Cosine score<br/>< 0.3?"}
+        T8["Task 8: PageIndex<br/>Vectorless Fallback"]
+
+        Q --> T5
+        Q --> T6
+        Chroma -.-> T5
+        Chroma -.-> T6
+        T5 --> T7
+        T6 --> T7
+        T5 -->|"best score gốc"| Thresh
+        Thresh -->|"Không"| Final["Top-k chunks"]
+        Thresh -->|"Có"| T8
+        T7 --> Final
+        T8 --> Final
+    end
+
+    subgraph Gen["Generation — Task 10"]
+        Reorder["Reorder chống<br/>lost-in-the-middle"]
+        Prompt["System Prompt<br/>+ Context + Chat History"]
+        LLM["OpenRouter / OpenAI<br/>gpt-4o-mini"]
+        Answer["Câu trả lời có citation"]
+
+        Final --> Reorder --> Prompt --> LLM --> Answer
+    end
+
+    UI["Streamlit Chatbot (app.py)<br/>hiển thị answer + sources + conversation memory"]
+    Answer --> UI
+
+    Eval["group_project/evaluation<br/>RAGAS: Faithfulness, Relevance,<br/>Context Recall/Precision"]
+    UI -.-> Eval
 ```
-[Vẽ diagram kiến trúc ở đây]
-```
+
+**Luồng dữ liệu:** `data/landing/` (PDF/JSON thô) → `data/standardized/` (Markdown chuẩn) → `chroma_db/` (vector store) → Hybrid Retrieval (dense + sparse + RRF + fallback) → Generation có citation → Chatbot UI.
 
 ---
 
@@ -559,10 +612,11 @@ run_dashboard()
 
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 |-----------|------|----------|------------|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| Bùi Xuân Tùng | 2A202601828 | Leader & RAG Architect — điều phối, Task 9 (retrieval pipeline), tích hợp | Hoàn thành |
+| Nguyễn Trung Hiếu | 2A202601620 | Data & Dense Retrieval — Task 1–5 (thu thập data, Markdown, ChromaDB, semantic search) | Hoàn thành |
+| Trần Trung Kiên | 2A202601754 | Sparse Retrieval & Fallback — Task 6–8 (BM25, RRF reranking, PageIndex fallback) | Hoàn thành |
+| Nguyễn Quang Sơn | 2A202601956 | Frontend & Generation — app.py, Task 10 (citation, conversation memory) | Hoàn thành |
+| Đặng Ngọc Anh | 2A202601706 | Evaluation & QA — golden dataset, RAGAS A/B testing, results.md, QA toàn pipeline | Hoàn thành |
 
 ---
 

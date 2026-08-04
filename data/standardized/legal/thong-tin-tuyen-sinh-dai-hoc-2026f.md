@@ -1,3 +1,16 @@
+---
+doc_id: "thong-tin-tuyen-sinh-dai-hoc-2026f"
+title: "Đề án tuyển sinh Đại Học Bách Khoa Hà Nội năm 2026 (bản đầy đủ)"
+source_url: "https://hust.edu.vn/uploads/sys/tuyen-sinh/2023_06/thong-tin-tuyen-sinh-dai-hoc-2026f.pdf"
+source_type: "legal"
+document_type: "de_an_tuyen_sinh"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2026"
+published_date: "not-stated"
+retrieved_at: "2026-08-04"
+audience: "both"
+---
+
 BỘ GIÁO DỤC VÀ ĐÀO TẠO CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 ĐẠI HỌC BÁCH KHOA HÀ NỘI Độc lập – Tự do – Hạnh phúc
 Số: /QĐ-ĐHBK Hà Nội, ngày tháng năm 2026

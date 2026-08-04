@@ -1,10 +1,17 @@
-# Quy định về Phương thức Xét tuyển tài năng năm 2026
-
-**Source:** https://ts.hust.edu.vn/vi/tin-tuc/quy-dinh-ve-phuong-thuc-xet-tuyen-tai-nang-nam-2026
-**Published:** 2026-03-30
-**Crawled:** 2026-08-04T08:54:33.828272+00:00
-
 ---
+doc_id: "article_06"
+title: "Quy định về Phương thức Xét tuyển tài năng năm 2026"
+source_url: "https://ts.hust.edu.vn/vi/tin-tuc/quy-dinh-ve-phuong-thuc-xet-tuyen-tai-nang-nam-2026"
+source_type: "news"
+document_type: "quy_dinh"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2026"
+published_date: "2026-03-30"
+retrieved_at: "2026-08-04"
+audience: "thi_sinh"
+---
+
+# Quy định về Phương thức Xét tuyển tài năng năm 2026
 
 # Quy định về Phương thức Xét tuyển tài năng năm 2026
 Ngày 17/3/2026, Đại học Bách khoa Hà Nội công bố Quy định về Phương thức XTTN năm 2026. Quy định này áp dụng cho thí sinh đăng ký xét tuyển vào các chương trình đào tạo đại học chính quy của Đại học Bách khoa Hà Nội theo phương thức XTTN, bao gồm:

@@ -1,10 +1,17 @@
-# Thông tin Tuyển sinh Đại học chính quy năm 2026
-
-**Source:** https://ts.hust.edu.vn/tin-tuc/thong-tin-tuyen-sinh-dai-hoc-chinh-quy-nam-2026
-**Published:** 2026-02-25
-**Crawled:** 2026-08-04T08:54:37.835514+00:00
-
 ---
+doc_id: "article_07"
+title: "Thông tin Tuyển sinh Đại học chính quy năm 2026"
+source_url: "https://ts.hust.edu.vn/tin-tuc/thong-tin-tuyen-sinh-dai-hoc-chinh-quy-nam-2026"
+source_type: "news"
+document_type: "tin_tuc"
+school: "Đại học Bách Khoa Hà Nội"
+document_version: "2026"
+published_date: "2026-02-25"
+retrieved_at: "2026-08-04"
+audience: "both"
+---
+
+# Thông tin Tuyển sinh Đại học chính quy năm 2026
 
 # Thông tin Tuyển sinh Đại học chính quy năm 2026
 Đại học Bách khoa Hà Nội chính thức công bố thông tin tuyển sinh Đại học chính quy năm 2026. Với tổng chỉ tiêu dự kiến là 9.880 sinh viên, nhà trường tiếp tục giữ ổn định 3 phương thức tuyển sinh cốt lõi: Xét tuyển tài năng, Xét tuyển theo điểm thi Đánh giá tư duy (TSA) và Xét tuyển theo điểm thi tốt nghiệp THPT. 

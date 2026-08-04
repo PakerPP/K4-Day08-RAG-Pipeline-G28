@@ -1,10 +1,14 @@
 ---
 doc_id: "thong-tin-tuyen-sinh-2025"
-title: "Đề án tuyển sinh Đại Học Bách Khoa Hà Nội 2025 và các năm mới nhất"
-source_url: "https://diemthi.tuyensinh247.com/de-an-tuyen-sinh/dai-hoc-bach-khoa-ha-noi-BKA.html"
-retrieved_at: "2026-08-04"
+title: "Đề án tuyển sinh Đại Học Bách Khoa Hà Nội năm 2025"
+source_url: "https://hust.edu.vn/uploads/sys/tuyen-sinh/2023_06/thong-tin-tuyen-sinh-2025.pdf"
+source_type: "legal"
+document_type: "de_an_tuyen_sinh"
+school: "Đại học Bách Khoa Hà Nội"
 document_version: "2025"
-type: "de_an_tuyen_sinh"
+published_date: "not-stated"
+retrieved_at: "2026-08-04"
+audience: "both"
 ---
 BỘ GIÁO DỤC VÀ ĐÀO TẠO CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 ĐẠI HỌC BÁCH KHOA HÀ NỘI Độc lập – Tự do – Hạnh phúc

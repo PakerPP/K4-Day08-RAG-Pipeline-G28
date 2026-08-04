@@ -69,9 +69,28 @@ Xem code mẫu (DeepEval/RAGAS/TruLens) chi tiết trong `README.md` gốc mục
 
 ## Kiến Trúc Hệ Thống
 
+```mermaid
+flowchart LR
+    User["Người dùng"] -->|"Câu hỏi + lịch sử chat"| UI["Streamlit Chatbot<br/>(app.py)"]
+    UI --> Retrieve["Task 9: Hybrid Retrieval<br/>(Semantic + BM25 + RRF + PageIndex fallback)"]
+    Retrieve --> Generate["Task 10: Generation<br/>(reorder + citation + chat history)"]
+    Generate -->|"answer + sources"| UI
+    UI -->|"hiển thị"| User
+
+    Chroma[("ChromaDB<br/>1047 chunks<br/>HUST admissions data")] -.-> Retrieve
+
+    subgraph Eval["Evaluation (group_project/evaluation)"]
+        Golden["golden_dataset.json<br/>15 câu Q&A"]
+        RAGAS["RAGAS: Faithfulness,<br/>Relevance, Recall, Precision"]
+        Report["results.md<br/>A/B comparison + worst performers"]
+        Golden --> RAGAS --> Report
+    end
+
+    Retrieve -.->|"dùng lại pipeline thật"| RAGAS
+    Generate -.->|"dùng lại pipeline thật"| RAGAS
 ```
-[Vẽ diagram kiến trúc ở đây]
-```
+
+Chi tiết kiến trúc từng Task 1-10 (thu thập dữ liệu → chunking/indexing → retrieval → generation) xem tại [README.md gốc, mục Kiến Trúc Hệ Thống](../README.md#kiến-trúc-hệ-thống).
 
 ---
 
@@ -79,10 +98,11 @@ Xem code mẫu (DeepEval/RAGAS/TruLens) chi tiết trong `README.md` gốc mục
 
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 |-----------|------|----------|------------|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| Bùi Xuân Tùng | 2A202601828 | Leader & RAG Architect — điều phối, Task 9 (retrieval pipeline), tích hợp | ✅ Hoàn thành |
+| Nguyễn Trung Hiếu | 2A202601620 | Data & Dense Retrieval — Task 1–5 (thu thập data, Markdown, ChromaDB, semantic search) | ✅ Hoàn thành |
+| Trần Trung Kiên | 2A202601754 | Sparse Retrieval & Fallback — Task 6–8 (BM25, RRF reranking, PageIndex fallback) | ✅ Hoàn thành |
+| Nguyễn Quang Sơn | 2A202601956 | Frontend & Generation — app.py, Task 10 (citation, conversation memory) | ✅ Hoàn thành |
+| Đặng Ngọc Anh | 2A202601706 | Evaluation & QA — golden dataset, RAGAS A/B testing, results.md, QA toàn pipeline | ✅ Hoàn thành |
 
 ---
 

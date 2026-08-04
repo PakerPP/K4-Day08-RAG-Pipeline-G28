@@ -177,9 +177,10 @@ def rerank(
         return rerank_cross_encoder(query, candidates, top_k)
     elif method == "mmr":
         # Cần query_embedding - embed query trước
-        query_embedding = get_embedding_from_sentence_transformers(query)
+        from .task4_chunking_indexing import embed_texts
+        query_embedding = embed_texts([query])[0]
         return rerank_mmr(query_embedding, candidates, top_k=top_k)
-        
+
     elif method == "rrf":
         # Với một list đã fusion ở Task 9, giữ nguyên điểm RRF đã tính; dùng
         # rerank_rrf([dense_results, sparse_results]) khi cần fusion nhiều ranker.

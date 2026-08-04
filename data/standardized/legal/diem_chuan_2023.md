@@ -2,9 +2,13 @@
 doc_id: "diem_chuan_2023"
 title: "Điểm chuẩn Đại Học Bách Khoa Hà Nội 2023"
 source_url: "https://diemthi.tuyensinh247.com/diem-chuan/dai-hoc-bach-khoa-ha-noi-BKA.html"
-retrieved_at: "2026-08-04"
+source_type: "legal"
+document_type: "diem_chuan"
+school: "Đại học Bách Khoa Hà Nội"
 document_version: "2023"
-type: "diem_chuan"
+published_date: "not-stated"
+retrieved_at: "2026-08-04"
+audience: "thi_sinh"
 ---
 ## Điểm chuẩn trúng tuyển theo phương thức điểm thi năm 2023
 |     |     |     |     |     |
