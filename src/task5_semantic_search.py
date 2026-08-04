@@ -9,6 +9,8 @@ Yêu cầu:
     - Phải tương thích với embedding model và vector store ở Task 4
 """
 
+from .task4_chunking_indexing import embed_texts, get_collection
+
 
 def semantic_search(query: str, top_k: int = 10) -> list[dict]:
     """
@@ -26,6 +28,14 @@ def semantic_search(query: str, top_k: int = 10) -> list[dict]:
         }
         Sorted by score descending.
     """
+    if not query or not query.strip() or top_k <= 0:
+        return []
+
+    collection = get_collection()
+    count = collection.count()
+    if count == 0:
+        return []
+
     # TODO: Implement semantic search
     #
     # Bước 1: Embed query bằng cùng model ở Task 4
@@ -57,7 +67,32 @@ def semantic_search(query: str, top_k: int = 10) -> list[dict]:
     #
     # output.sort(key=lambda x: x["score"], reverse=True)
     # return output[:top_k]
-    raise NotImplementedError("Implement semantic_search")
+    results = collection.query(
+        query_embeddings=[embed_texts([query])[0]],
+        n_results=min(top_k, count),
+        include=["documents", "metadatas", "distances"],
+    )
+
+    documents = results.get("documents", [[]])[0] or []
+    metadatas = results.get("metadatas", [[]])[0] or []
+    distances = results.get("distances", [[]])[0] or []
+    ids = results.get("ids", [[]])[0] or []
+    output = []
+    for document, metadata, distance, chunk_id in zip(
+        documents, metadatas, distances, ids
+    ):
+        # Chroma trả cosine distance; đổi về cosine similarity để các Task sau
+        # dùng cùng thang điểm [0, 1].
+        score = max(0.0, min(1.0, 1.0 - float(distance)))
+        output.append(
+            {
+                "content": document,
+                "score": round(score, 4),
+                "metadata": {**(metadata or {}), "chunk_id": chunk_id},
+            }
+        )
+
+    return sorted(output, key=lambda item: item["score"], reverse=True)[:top_k]
 
 
 if __name__ == "__main__":
