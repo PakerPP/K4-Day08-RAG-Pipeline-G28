@@ -3,7 +3,7 @@ doc_id: "dai-hoc-bach-khoa-ha-noi-bka"
 title: "Đề án tuyển sinh Đại Học Bách Khoa Hà Nội 2026 và các năm mới nhất"
 source_url: "https://diemthi.tuyensinh247.com/de-an-tuyen-sinh/dai-hoc-bach-khoa-ha-noi-BKA.html"
 retrieved_at: "2026-08-04"
-document_version: "not-stated"
+document_version: "2026"
 type: "de_an_tuyen_sinh"
 ---
 

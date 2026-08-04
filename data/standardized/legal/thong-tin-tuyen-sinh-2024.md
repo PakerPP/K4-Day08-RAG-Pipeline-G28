@@ -1,3 +1,12 @@
+---
+doc_id: "thong-tin-tuyen-sinh-2024"
+title: "Đề án tuyển sinh Đại Học Bách Khoa Hà Nội 2024 và các năm mới nhất"
+source_url: "https://diemthi.tuyensinh247.com/de-an-tuyen-sinh/dai-hoc-bach-khoa-ha-noi-BKA.html"
+retrieved_at: "2026-08-04"
+document_version: "2024"
+type: "de_an_tuyen_sinh"
+---
+
 BỘ GIÁO DỤC VÀ ĐÀO TẠO CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 ĐẠI HỌC BÁCH KHOA HÀ NỘI Độc lập - Tự do - Hạnh phúc
 ĐỀ ÁN TUYỂN SINH ĐẠI HỌC NĂM 2024
