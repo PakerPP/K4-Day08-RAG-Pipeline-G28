@@ -93,6 +93,47 @@ def render_retrieval_results(title: str, results: list[dict]) -> None:
         st.markdown(f"**[{index}] {source}** — score: `{score:.4f}`")
         st.caption(result.get("content", "")[:350])
 
+
+def get_retrieval_mode(sources: list[dict], declared_mode: str | None = None) -> str:
+    """Xác định retrieval path để UI hiển thị đúng trạng thái CP3.
+
+    Task 9 đánh dấu kết quả hybrid/pageindex ở field ``source`` cấp kết quả.
+    ``declared_mode`` được ưu tiên để tương thích với response của Task 10 sau này.
+    """
+    if declared_mode in {"hybrid", "pageindex"}:
+        return declared_mode
+    if any(source.get("source") == "pageindex" for source in sources):
+        return "pageindex"
+    return "hybrid" if sources else "unknown"
+
+
+def render_retrieval_mode(mode: str) -> None:
+    """Thông báo retrieval path cho người dùng, nhất là khi fallback được kích hoạt."""
+    if mode == "pageindex":
+        st.warning(
+            "⚠️ **PageIndex fallback đang được dùng.** "
+            "Điểm semantic chưa đủ tin cậy nên hệ thống chuyển sang truy vấn theo cấu trúc tài liệu."
+        )
+    elif mode == "hybrid":
+        st.caption("✅ Retrieval: Hybrid (Semantic + BM25 + RRF)")
+
+
+def render_sources(sources: list[dict]) -> None:
+    """Hiển thị các tài liệu đã dùng, dùng được cho cả hybrid và PageIndex."""
+    with st.expander(f"📚 Nguồn tham khảo ({len(sources)} chunks)"):
+        for i, src in enumerate(sources, 1):
+            meta = src.get("metadata", {}) or {}
+            source_name = meta.get("source") or meta.get("section") or "Unknown"
+            doc_type = meta.get("type", "unknown")
+            retrieval_source = src.get("source", "hybrid")
+            score = float(src.get("score", 0))
+            st.markdown(
+                f"**[{i}] {source_name}** `{doc_type}` · `{retrieval_source}` "
+                f"| score: `{score:.4f}`"
+            )
+            st.text(src.get("content", "")[:300] + "...")
+            st.divider()
+
 # =============================================================================
 # MAIN CHAT AREA
 # =============================================================================
@@ -105,15 +146,8 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
         if msg["role"] == "assistant" and "sources" in msg and msg["sources"]:
-            with st.expander(f"📚 Nguồn tham khảo ({len(msg['sources'])} chunks)"):
-                for i, src in enumerate(msg["sources"], 1):
-                    meta = src.get("metadata", {})
-                    source_name = meta.get("source", "Unknown")
-                    doc_type = meta.get("type", "unknown")
-                    score = src.get("score", 0)
-                    st.markdown(f"**[{i}] {source_name}** `{doc_type}` | score: `{score:.4f}`")
-                    st.text(src.get("content", "")[:300] + "...")
-                    st.divider()
+            render_retrieval_mode(msg.get("retrieval_mode", "hybrid"))
+            render_sources(msg["sources"])
 
 # =============================================================================
 # QUERY HANDLING
@@ -171,29 +205,28 @@ if query:
                 response = generate_with_citation(query, top_k=top_k)
                 answer = response.get("answer", "Chưa thể trả lời.")
                 sources = response.get("sources", [])
+                retrieval_mode = get_retrieval_mode(
+                    sources, response.get("retrieval_mode")
+                )
 
             except NotImplementedError:
                 answer = "⚠️ **Task 10 chưa được implement.** Hãy hoàn thành `src/task10_generation.py` để kết nối pipeline vào UI!"
                 sources = []
+                retrieval_mode = "unknown"
             except Exception as e:
                 answer = f"❌ **Lỗi khi chạy RAG Pipeline:** {e}"
                 sources = []
+                retrieval_mode = "unknown"
 
             st.markdown(answer)
 
             if sources:
-                with st.expander(f"📚 Nguồn tham khảo ({len(sources)} chunks)"):
-                    for i, src in enumerate(sources, 1):
-                        meta = src.get("metadata", {})
-                        source_name = meta.get("source", "Unknown")
-                        doc_type = meta.get("type", "unknown")
-                        score = src.get("score", 0)
-                        st.markdown(f"**[{i}] {source_name}** `{doc_type}` | score: `{score:.4f}`")
-                        st.text(src.get("content", "")[:300] + "...")
-                        st.divider()
+                render_retrieval_mode(retrieval_mode)
+                render_sources(sources)
 
     st.session_state.messages.append({
         "role": "assistant",
         "content": answer,
         "sources": sources,
+        "retrieval_mode": retrieval_mode,
     })
