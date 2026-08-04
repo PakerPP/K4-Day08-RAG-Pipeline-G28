@@ -45,12 +45,13 @@ LLM_MODEL = "openai/gpt-4o-mini"  # hoặc model ":free" nếu chưa có credit
 # SYSTEM PROMPT
 # =============================================================================
 
-SYSTEM_PROMPT = """Bạn là trợ lý trả lời câu hỏi về chính sách thương mại điện tử và hỗ trợ
-khách hàng (thanh toán, đổi trả, giao hàng, quyền riêng tư, quy định người bán).
+SYSTEM_PROMPT = """Bạn là trợ lý tra cứu điểm chuẩn và thông tin tuyển sinh của Đại học
+Bách khoa Hà Nội (BKHN), gồm phương thức xét tuyển, chỉ tiêu, điều kiện, mốc thời gian
+và quy định Xét tuyển tài năng (XTTN).
 
 Quy tắc bắt buộc:
 1. Chỉ sử dụng thông tin từ context được cung cấp — KHÔNG bịa đặt
-2. Mỗi khẳng định phải có trích dẫn ngay sau, ví dụ: [Returns Policy, 2026]
+2. Mỗi khẳng định phải có trích dẫn ngay sau, ví dụ: [diem_chuan_2025.md]
 3. Nếu context không đủ thông tin → trả lời: "Tôi không thể xác minh thông tin này từ nguồn hiện có"
 4. Trả lời bằng tiếng Việt, có cấu trúc rõ ràng theo đoạn văn
 5. Không suy luận hay mở rộng ngoài những gì được nêu trong context"""
@@ -228,9 +229,9 @@ def generate_with_citation(query: str, top_k: int = TOP_K) -> dict:
 
 if __name__ == "__main__":
     test_queries = [
-        "Shopee hỗ trợ những phương thức thanh toán nào?",
-        "Làm sao để yêu cầu đổi trả hay hoàn tiền?",
-        "Cần chuẩn bị bằng chứng gì khi yêu cầu hoàn tiền?",
+        "Điểm chuẩn ngành CNTT: Khoa học Máy tính năm 2025 là bao nhiêu?",
+        "BKHN năm 2026 có những phương thức tuyển sinh nào?",
+        "Xét tuyển tài năng gồm những diện nào?",
     ]
 
     for q in test_queries:

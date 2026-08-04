@@ -40,12 +40,11 @@ CONTRACT MÀ TASK 4 (CHROMADB) CẦN ĐÁP ỨNG cho module này chạy đúng:
 import re
 from pathlib import Path
 
+from .task4_chunking_indexing import CHROMA_DIR, COLLECTION_NAME
+
 # =============================================================================
 # CONFIGURATION — phải khớp với Task 4
 # =============================================================================
-
-CHROMA_DIR = Path(__file__).parent.parent / "chroma_db"
-COLLECTION_NAME = "ecommerce_support_docs"  # TODO: đổi nếu Task 4 dùng tên khác
 
 BM25_K1 = 1.5   # term saturation — giá trị mặc định phổ biến, không cần tune thêm
 BM25_B = 0.75   # length normalization — giá trị mặc định phổ biến
